@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -36,6 +37,8 @@ public class WifiScanner extends Activity
 	String[] macAdresses = {"00:12:44:ba:27:10","00:3a:98:72:ba:a0","00:17:Of:35:10:30","00:12:44:ba:78:10","00:12:44:ba:70:40","00:12:44:ba:7b:30","00:12:44:ba:78:10","00:3a:98:72:b8:50","00:3a:98:62:b5:00","00:3a:98:62:b7:00","00:12:44:ba:77:e0","00:24:97:f2:84:c0","00:12:44:ba:18:60","00:3a:98:62:b3:b0","00:12:44:ba:3a:D9","00:12:44:ba:3a:b0","00:24:97:f2:84:00","00:24:97:f2:83:80","00:24:97:f2:84:40","00:24:97:f3:0d:70"};
 	Trilateration trilateration;
 	
+	private Handler handlerTimer = new Handler();
+
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -45,8 +48,19 @@ public class WifiScanner extends Activity
 		trilateration = new Trilateration();
 		makeButtonListener();
 		scan();	
+		
+		handlerTimer.removeCallbacks(taskUpdateWifis );
+		handlerTimer.postDelayed(taskUpdateWifis , 100); 
 	}
 	
+	private Runnable taskUpdateWifis = new Runnable() {
+	       public void run() {     
+	    	   			scan();
+
+	            //Do this again in 30 seconds          
+	            handlerTimer.postDelayed(this, 1000);
+	    }
+	};
 	private void makeButtonListener()
 	{
 		findViewById(R.id.buttonScan).setOnClickListener(new OnClickListener()
