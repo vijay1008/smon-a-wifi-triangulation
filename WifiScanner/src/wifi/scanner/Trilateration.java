@@ -6,7 +6,7 @@ import java.util.List;
 public class Trilateration
 {
 
-	static double calcDistance(double rssi)
+	public static double calcDistance(double rssi)
 	{
 		double base = 10;
 		double exponent = -(rssi + 51.504) / 16.532;
@@ -34,7 +34,7 @@ public class Trilateration
 	}
 
 	// Convert Feet into Meter
-	static double calFeetToMeter(double rssi)
+	public static double calFeetToMeter(double rssi)
 	{
 		return rssi * 0.3048;
 	}
@@ -45,7 +45,7 @@ public class Trilateration
 	// latitude and longitude unit.
 	// This function convert rssi distance into lat long decimal unit.
 	//
-	static double calDistToDeg(double dist)
+	public static double calDistToDeg(double dist)
 	{
 		double result;
 		double DistToDeg;
@@ -73,7 +73,7 @@ public class Trilateration
 
 	}
 
-	static double getLongitude(double Lat1, double Long1, double rssi1,
+	public static double getLongitude(double Lat1, double Long1, double rssi1,
 			double Lat2, double Long2, double rssi2, double Lat3, double Long3,
 			double rssi3)
 	{
@@ -92,7 +92,7 @@ public class Trilateration
 		return MyLong;
 	}
 
-	static double getLatitude(double Lat1, double Long1, double rssi1,
+	public static double getLatitude(double Lat1, double Long1, double rssi1,
 			double Lat2, double Long2, double rssi2, double Lat3, double Long3,
 			double rssi3)
 	{
@@ -114,7 +114,7 @@ public class Trilateration
 		return MyLat;
 	}
 
-	static double[] myRotation(double x, double y, double dist, double deg)
+	public static double[] myRotation(double x, double y, double dist, double deg)
 	{
 
 		double tmpX, tmpY;
@@ -135,7 +135,7 @@ public class Trilateration
 		return myLocation;
 	}
 
-	static double[] MyTrilateration(double Lat1, double Long1, double rssi1,
+	public static double[] MyTrilateration(double Lat1, double Long1, double rssi1,
 			double Lat2, double Long2, double rssi2, double Lat3, double Long3,
 			double rssi3)
 	{
