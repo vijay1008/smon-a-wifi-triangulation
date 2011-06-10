@@ -28,9 +28,10 @@ public class Trilateration
 		double distance = 730.24198315 + 52.33325511 * rssi + 1.35152407
 				* Math.pow(rssi, 2) + 0.01481265 * Math.pow(rssi, 3)
 				+ 0.00005900 * Math.pow(rssi, 4) + 0.00541703 * 180;
-
+		
+		
 		// return (distance>0)?distance:rssi;
-		return distance;
+		return calFeetToMeter(distance);
 	}
 
 	// Convert Feet into Meter
