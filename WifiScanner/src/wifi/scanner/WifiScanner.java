@@ -35,8 +35,7 @@ public class WifiScanner extends Activity
 	Boolean color;
 	Timer myTimer;
 	String[] macAdresses = {"00:12:44:ba:27:10","00:3a:98:72:ba:a0","00:17:Of:35:10:30","00:12:44:ba:78:10","00:12:44:ba:70:40","00:12:44:ba:7b:30","00:12:44:ba:78:10","00:3a:98:72:b8:50","00:3a:98:62:b5:00","00:3a:98:62:b7:00","00:12:44:ba:77:e0","00:24:97:f2:84:c0","00:12:44:ba:18:60","00:3a:98:62:b3:b0","00:12:44:ba:3a:D9","00:12:44:ba:3a:b0","00:24:97:f2:84:00","00:24:97:f2:83:80","00:24:97:f2:84:40","00:24:97:f3:0d:70"};
-	Trilateration trilateration;
-	
+
 	private Handler handlerTimer = new Handler();
 
 	/** Called when the activity is first created. */
@@ -45,7 +44,6 @@ public class WifiScanner extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-		trilateration = new Trilateration();
 		makeButtonListener();
 		scan();	
 		
@@ -135,9 +133,7 @@ public class WifiScanner extends Activity
 					tv = new TextView(this);
 					tv.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
 
-					double distance = trilateration.calcDistance(s.level);
-					
-					tv.setText(" SSID: \t\t\t\t" + s.SSID + "\n Frequency: \t\t " + s.frequency + "\n Signal(dBm): \t" + s.level + "\n Mac: \t\t\t\t" + s.BSSID + "\nDistance: " + distance);
+					tv.setText(" SSID: \t\t\t\t" + s.SSID + "\n Frequency: \t\t " + s.frequency + "\n Signal(dBm): \t" + s.level + "\n Mac: \t\t\t\t" + s.BSSID);
 //					tv.setText(s.level + " - " + s.BSSID);
 
 					if (color)
