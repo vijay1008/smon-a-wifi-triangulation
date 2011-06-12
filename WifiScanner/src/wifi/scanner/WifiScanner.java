@@ -66,7 +66,7 @@ public class WifiScanner extends Activity
 			scan();
 
 			// Do this again in 30 seconds
-			handlerTimer.postDelayed(this, 10000);
+			handlerTimer.postDelayed(this, 20000);
 		}
 	};
 
