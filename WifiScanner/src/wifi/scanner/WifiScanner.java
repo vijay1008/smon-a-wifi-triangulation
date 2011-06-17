@@ -36,24 +36,21 @@ public class WifiScanner extends MapActivity {
 
     private MapView mapview;
     private MyLocationOverlay m_locationOverlay;
-    WifiManager wifim;
-    LinearLayout ll;
-    ScrollView scroll;
-    TextView tv;
-    LinearLayout m_vwWifiLinearLayout;
-    Boolean color;
-    Timer myTimer;
+    private WifiManager wifim;
+
+    private TextView tv;
+    private LinearLayout m_vwWifiLinearLayout;
+    private Boolean color;
+    private ArrayList<Router> _routers = new ArrayList<Router>();
+    private ArrayList<GeoPoint> m_arrPathPoints;
+    private Handler handlerTimer = new Handler();
+    ArrayList<GeoPoint> geoPointsRouters;
+    
     String[] macAdresses = { "00:12:44:ba:27:10", "00:3a:98:72:ba:a0", "00:17:Of:35:10:30", "00:12:44:ba:78:10", "00:12:44:ba:70:40",
 	    "00:12:44:ba:7b:30", "00:12:44:ba:78:10", "00:3a:98:72:b8:50", "00:3a:98:62:b5:00", "00:3a:98:62:b7:00", "00:12:44:ba:77:e0",
 	    "00:24:97:f2:84:c0", "00:12:44:ba:18:60", "00:3a:98:62:b3:b0", "00:12:44:ba:3a:D9", "00:12:44:ba:3a:b0", "00:24:97:f2:84:00",
 	    "00:24:97:f2:83:80", "00:24:97:f2:84:40", "00:24:97:f3:0d:70" };
-    ArrayList<Router> _routers = new ArrayList<Router>();
-
-    Trilateration trilateration;
-    private ArrayList<GeoPoint> m_arrPathPoints;
-
-    private Handler handlerTimer = new Handler();
-
+    
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -62,25 +59,33 @@ public class WifiScanner extends MapActivity {
 
 	mapview = (MapView) findViewById(R.id.mapview);
 	mapview.setBuiltInZoomControls(true);
+	mapview.setSatellite(true);
+	
+	m_locationOverlay = new MyLocationOverlay(this, mapview);
+	m_locationOverlay.enableCompass();
+	
+	m_arrPathPoints = new ArrayList<GeoPoint>();
+	geoPointsRouters = new ArrayList<GeoPoint>();
+	
+	List<Overlay> listoverlay = mapview.getOverlays();
+	listoverlay.add(m_locationOverlay);
 
+	//voor teken routers
+	listoverlay.add(new PathOverlayRouters(geoPointsRouters));
+	
+	//calculate points
+	listoverlay.add(new PathOverlay(m_arrPathPoints));
+	
+		
+	
+	
 	makeButtonListener();
 	scan();
 	addRouters();
-
-	m_locationOverlay = new MyLocationOverlay(this, mapview);
-	m_locationOverlay.enableCompass();
+	drawRouters(_routers);
 
 	handlerTimer.removeCallbacks(taskUpdateWifis);
 	handlerTimer.postDelayed(taskUpdateWifis, 100);
-
-	m_arrPathPoints = new ArrayList<GeoPoint>();
-
-	List<Overlay> listoverlay = mapview.getOverlays();
-	listoverlay.add(m_locationOverlay);
-	
-	listoverlay.add(new PathOverlay(m_arrPathPoints));
-	mapview.setSatellite(true);
-//	drawRouters();
     }
 
     private void addRouters() {
@@ -176,52 +181,16 @@ public class WifiScanner extends MapActivity {
 	}
     }
     
-    public void drawRouters()
+    public void drawRouters(ArrayList<Router> routers)
     {
-	for (Router r : _routers) 
+	for (Router r : routers) 
 	{
 	    GeoPoint gpoint = r.getGeoPoint();
-	    m_arrPathPoints.add(gpoint);
-	    mapview.postInvalidate();
+	    geoPointsRouters.add(gpoint);
 	}
+	mapview.postInvalidate();
     }
 
-    
-//	public void testGeo(List<ScanResult> listSort)
-//	{
-//		ArrayList<ScanResult> test = new ArrayList<ScanResult>();
-//		test.clear();
-//		for (ScanResult s : listSort)
-//		{
-//			for (int i = 0; i < macAdresses.length; i++)
-//			{
-//				if (test.size() < 3)
-//				{
-//					test.add(s);
-//				}
-//			}
-//		}
-//		
-//		double[] geo = trilateration.MyTrilateration(51.451690, 5.481781, trilateration.calcDistance(test.get(0).level), 
-//														51.451563, 5.481635, trilateration.calcDistance(test.get(1).level), 51.451587, 5.481856, trilateration.calcDistance(test.get(2).level));
-//		
-//		    tv = new TextView(this);
-//		    tv.setText("Location:\n Lat:\t " + geo[0] + "\n Long:\t " + geo[1] + "\n");
-//		    tv.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
-//		    m_vwWifiLinearLayout.addView(tv, 0);
-//		    
-//		    GeoPoint gpoint = new GeoPoint((int) (geo[0] * 1E6), (int) (geo[1] * 1E6));
-//
-//		    mapview.getController().animateTo(gpoint);
-//	
-//		    if (gpoint != null)
-//		    {
-//			m_arrPathPoints.add(gpoint);
-//			mapview.postInvalidate();
-//		    }
-//		
-//	}
-	
 	
     public void testGeo(ArrayList<Router> routers) {
 	ArrayList<Router> test = new ArrayList<Router>();

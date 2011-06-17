@@ -15,7 +15,7 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
 import com.google.android.maps.Projection;
 
-public class PathOverlay extends Overlay {
+public class PathOverlayRouters extends Overlay {
 
     private final List<GeoPoint> m_arrPathPoints;
 
@@ -27,7 +27,7 @@ public class PathOverlay extends Overlay {
     private static final int START_RADIUS = 5;
     private static final int PATH_WIDTH = 3;
 
-    public PathOverlay(List<GeoPoint> pathPoints) {
+    public PathOverlayRouters(List<GeoPoint> pathPoints) {
 	super();
 	m_arrPathPoints = pathPoints;
 	m_point = new Point();
@@ -42,9 +42,11 @@ public class PathOverlay extends Overlay {
 	super.draw(canvas, mapView, shadow);
 
 	if (!m_arrPathPoints.isEmpty()) {
-	    m_paint.setARGB(255, 0, 255, 0);
+	    m_paint.setARGB(255, 255, 0, 0);
 	    m_paint.setStrokeWidth(PATH_WIDTH);
+
 	    Projection projection = mapView.getProjection();
+
 	    for (GeoPoint gp : m_arrPathPoints) {
 
 		projection.toPixels(gp, m_point);
@@ -53,23 +55,6 @@ public class PathOverlay extends Overlay {
 		canvas.drawOval(m_rect, m_paint);
 
 	    }
-
-	    // projection.toPixels(m_arrPathPoints.get(0), m_point);
-	    // m_rect.set(m_point.x - START_RADIUS, m_point.y - START_RADIUS,
-	    // m_point.x + START_RADIUS, m_point.y + START_RADIUS);
-	    //
-	    // canvas.drawOval(m_rect, m_paint);
-	    //
-	    // for (int i = 0; i <= m_arrPathPoints.size() - 1; i++) {
-	    // int j = i;
-	    // j++;
-	    // if (j <= m_arrPathPoints.size() - 1) {
-	    // projection.toPixels(m_arrPathPoints.get(i), m_point);
-	    // projection.toPixels(m_arrPathPoints.get(j), m_point2);
-	    // canvas.drawLine(m_point.x, m_point.y, m_point2.x, m_point2.y,
-	    // m_paint);
-	    // }
-	    // }
 	}
 
     }
