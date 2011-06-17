@@ -4,19 +4,11 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:gravity="top">
 
-	<LinearLayout android:id="@+id/linearLayoutButton"
-		android:layout_width="fill_parent" android:layout_height="wrap_content">
-		<Button android:layout_height="wrap_content"
-			android:layout_width="match_parent" android:id="@+id/buttonScan"
-			android:text="Scan" android:layout_weight="1"></Button>
-	</LinearLayout>
-
 
 	<ScrollView android:id="@+id/scrollView1"
 		android:layout_width="fill_parent" android:layout_below="@+id/linearLayoutButton"
 		android:layout_alignLeft="@+id/linearLayoutButton"
-		android:layout_alignRight="@+id/linearLayoutButton"
-		android:layout_height="200dip">
+		android:layout_alignRight="@+id/linearLayoutButton" android:layout_height="250dip">
 		<LinearLayout android:id="@+id/linearLayout1"
 			android:layout_width="fill_parent" android:layout_height="fill_parent">
 		</LinearLayout>
@@ -24,8 +16,7 @@
 
 	<LinearLayout android:layout_below="@+id/scrollView1"
 		android:layout_alignLeft="@+id/scrollView1" android:layout_alignRight="@+id/buttonScan"
-		android:id="@+id/linearLayout2" android:layout_height="match_parent"
-		android:layout_width="wrap_content">
+		android:id="@+id/linearLayout2" android:layout_height="match_parent" android:layout_width="match_parent">
 
 		<com.google.android.maps.MapView
 			android:id="@+id/mapview" android:layout_width="fill_parent"
