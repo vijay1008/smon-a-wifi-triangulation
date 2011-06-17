@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import wifi.Router;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
@@ -42,6 +44,9 @@ public class WifiScanner extends Activity
 			"00:12:44:ba:3a:D9", "00:12:44:ba:3a:b0", "00:24:97:f2:84:00",
 			"00:24:97:f2:83:80", "00:24:97:f2:84:40", "00:24:97:f3:0d:70" };
 
+	ArrayList<Router> _routers = new ArrayList<Router>();
+
+	
 	Trilateration trilateration;
 
 	private Handler handlerTimer = new Handler();
@@ -54,9 +59,33 @@ public class WifiScanner extends Activity
 		setContentView(R.layout.main);
 		makeButtonListener();
 		scan();
+		addRouters();
+		
 
 		handlerTimer.removeCallbacks(taskUpdateWifis);
 		handlerTimer.postDelayed(taskUpdateWifis, 100);
+	}
+	
+	private void addRouters()
+	{
+		_routers.add(new Router("00:12:44:ba:78:10", 51.451900, 5.480755));
+		_routers.add(new Router("00:12:44:ba:27:10", 51.452012, 5.480837));
+		_routers.add(new Router("00:3a:98:62:b5:00", 51.451857, 5.480882));
+		_routers.add(new Router("00:12:44:ba:70:40", 51.451925, 5.480987));
+		_routers.add(new Router("00:17:0f:35:10:30", 51.451988, 5.481058));
+		_routers.add(new Router("00:3a:98:72:b8:50", 51.451915, 5.481273));
+		_routers.add(new Router("00:3a:98:72:ba:a0", 51.452032, 5.481283));
+		_routers.add(new Router("00:12:44:ba:7b:30", 51.451940, 5.481375));
+		_routers.add(new Router("00:3a:98:62:b7:00", 51.451855, 5.481529));
+		_routers.add(new Router("00:12:44:ba:77:e0", 51.451769, 5.481456));
+		_routers.add(new Router("00:24:97:f2:83:80", 51.451563, 5.481635));
+		_routers.add(new Router("00:24:97:f2:84:00", 51.451690, 5.481781));
+		_routers.add(new Router("00:24:97:f2:84:40", 51.451587, 5.481856));
+		_routers.add(new Router("00:24:97:f3:0d:70", 51.451574, 5.482076));
+		_routers.add(new Router("00:24:97:f2:84:c0", 51.451814, 5.481907));
+		_routers.add(new Router("00:12:44:ba:18:60", 51.451804, 5.482146));
+		_routers.add(new Router("00:3a:98:62:b3:b8", 51.451826, 5.482443));
+		_routers.add(new Router("00:12:44:ba:3a:b0", 51.451725, 5.482439));
 	}
 
 	private Runnable taskUpdateWifis = new Runnable()
