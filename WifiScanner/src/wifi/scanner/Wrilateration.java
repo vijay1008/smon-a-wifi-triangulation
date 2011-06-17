@@ -31,4 +31,17 @@ public class Wrilateration
 
 		return result;
 	}
+	
+	
+	public double[] getGeo(double Lat1, double Long1,
+	            double rssi1, double Lat2, double Long2, double rssi2,
+	            double Lat3, double Long3, double rssi3)
+	{
+	    
+	    double[] result = new double[2];
+	    result[0]= getLatitude(Lat1, rssi1, Lat2, rssi2, Lat3, rssi3);
+	    result[1] = getLongitude(Long1, rssi1, Long2, rssi2, Long3, rssi3);
+	    return result;
+	    
+	}
 }
