@@ -212,9 +212,9 @@ public class WifiScanner extends MapActivity {
 
 	if (!(test.size() < 3)) {
 	    double[] geo = Trilateration.MyTrilateration(
-		    test.get(0).get_latitude(), test.get(0).get_longitude(), Trilateration.calcDistance(test.get(0).getLevel()),
-		    test.get(1).get_latitude(), test.get(1).get_longitude(), Trilateration.calcDistance(test.get(1).getLevel()), 
-		    test.get(2).get_latitude(), test.get(2).get_longitude(), Trilateration.calcDistance(test.get(2).getLevel()));
+		    test.get(0).get_latitude(), test.get(0).get_longitude(), test.get(0).getLevel(),
+		    test.get(1).get_latitude(), test.get(1).get_longitude(), test.get(1).getLevel(), 
+		    test.get(2).get_latitude(), test.get(2).get_longitude(), test.get(2).getLevel());
 
 	    tv = new TextView(this);
 	    tv.setText("Location:\n Lat:\t " + geo[0] + "\n Long:\t " + geo[1] + "\n");
