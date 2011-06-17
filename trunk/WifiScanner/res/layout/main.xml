@@ -6,13 +6,9 @@
 
 	<LinearLayout android:id="@+id/linearLayoutButton"
 		android:layout_width="fill_parent" android:layout_height="wrap_content">
-
 		<Button android:layout_height="wrap_content"
 			android:layout_width="match_parent" android:id="@+id/buttonScan"
 			android:text="Scan" android:layout_weight="1"></Button>
-		<Button android:layout_height="wrap_content" android:id="@+id/buttonFocusLocation"
-			android:layout_weight="1" android:layout_width="match_parent"
-			android:text="Focus Location"></Button>
 	</LinearLayout>
 
 

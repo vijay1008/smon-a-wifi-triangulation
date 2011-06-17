@@ -24,9 +24,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -46,6 +48,7 @@ public class WifiScanner extends MapActivity {
     private Handler handlerTimer = new Handler();
     private ArrayList<GeoPoint> geoPointsRouters;
     private boolean animateTo = true;
+    private Button buttonFocusLocation;
     
     String[] macAdresses = { "00:12:44:ba:27:10", "00:3a:98:72:ba:a0", "00:17:Of:35:10:30", "00:12:44:ba:78:10", "00:12:44:ba:70:40",
 	    "00:12:44:ba:7b:30", "00:12:44:ba:78:10", "00:3a:98:72:b8:50", "00:3a:98:62:b5:00", "00:3a:98:62:b7:00", "00:12:44:ba:77:e0",
@@ -56,8 +59,11 @@ public class WifiScanner extends MapActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
+	requestWindowFeature(Window.FEATURE_NO_TITLE);
 	setContentView(R.layout.main);
-
+	
+	
+	
 	mapview = (MapView) findViewById(R.id.mapview);
 	mapview.setBuiltInZoomControls(true);
 	mapview.setSatellite(true);
@@ -87,6 +93,8 @@ public class WifiScanner extends MapActivity {
 
 	handlerTimer.removeCallbacks(taskUpdateWifis);
 	handlerTimer.postDelayed(taskUpdateWifis, 100);
+
+	
     }
 
     private void addRouters() {
@@ -124,23 +132,6 @@ public class WifiScanner extends MapActivity {
 	    @Override
 	    public void onClick(View v) {
 		scan();
-	    }
-	});
-	
-	findViewById(R.id.buttonFocusLocation).setOnClickListener(new OnClickListener() {
-
-	    @Override
-	    public void onClick(View v) {
-		
-		if (animateTo)
-		{
-		    animateTo = false;
-		}
-		else
-		{
-		    animateTo = true;
-		}
-		
 	    }
 	});
     }
@@ -283,16 +274,33 @@ public class WifiScanner extends MapActivity {
 
 	}
     }
+  
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 	MenuInflater inflater = getMenuInflater();
 	inflater.inflate(R.menu.menu, menu);
 
-	menu.findItem(R.id.SCAN_MENU_ITEM).setOnMenuItemClickListener(new OnMenuItemClickListener() {
+	menu.findItem(R.id.FOCUS_MENU_ITEM).setOnMenuItemClickListener(new OnMenuItemClickListener() {
 	    @Override
 	    public boolean onMenuItemClick(MenuItem item) {
-		scan();
+		
+		if (animateTo)
+		{
+		    animateTo = false;
+		}
+		else
+		{
+		    animateTo = true;
+		}
+		return false;
+	    }
+	});
+	
+	menu.findItem(R.id.CLEAR_MENU_ITEM).setOnMenuItemClickListener(new OnMenuItemClickListener() {
+	    @Override
+	    public boolean onMenuItemClick(MenuItem item) {
+		m_arrPathPoints.clear();
 		return false;
 	    }
 	});
@@ -301,6 +309,8 @@ public class WifiScanner extends MapActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
+	menu.findItem(R.id.FOCUS_MENU_ITEM).setTitle("Focus Location: " + animateTo);
+	
 	return true;
     }
 
