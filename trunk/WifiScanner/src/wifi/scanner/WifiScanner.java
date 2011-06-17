@@ -44,7 +44,8 @@ public class WifiScanner extends MapActivity {
     private ArrayList<Router> _routers = new ArrayList<Router>();
     private ArrayList<GeoPoint> m_arrPathPoints;
     private Handler handlerTimer = new Handler();
-    ArrayList<GeoPoint> geoPointsRouters;
+    private ArrayList<GeoPoint> geoPointsRouters;
+    private boolean animateTo = true;
     
     String[] macAdresses = { "00:12:44:ba:27:10", "00:3a:98:72:ba:a0", "00:17:Of:35:10:30", "00:12:44:ba:78:10", "00:12:44:ba:70:40",
 	    "00:12:44:ba:7b:30", "00:12:44:ba:78:10", "00:3a:98:72:b8:50", "00:3a:98:62:b5:00", "00:3a:98:62:b7:00", "00:12:44:ba:77:e0",
@@ -112,8 +113,7 @@ public class WifiScanner extends MapActivity {
     private Runnable taskUpdateWifis = new Runnable() {
 	public void run() {
 	    scan();
-
-	    // Do this again in 30 seconds
+ 
 	    handlerTimer.postDelayed(this, 1000);
 	}
     };
@@ -124,6 +124,23 @@ public class WifiScanner extends MapActivity {
 	    @Override
 	    public void onClick(View v) {
 		scan();
+	    }
+	});
+	
+	findViewById(R.id.buttonFocusLocation).setOnClickListener(new OnClickListener() {
+
+	    @Override
+	    public void onClick(View v) {
+		
+		if (animateTo)
+		{
+		    animateTo = false;
+		}
+		else
+		{
+		    animateTo = true;
+		}
+		
 	    }
 	});
     }
@@ -215,7 +232,10 @@ public class WifiScanner extends MapActivity {
 
 	    GeoPoint gpoint = new GeoPoint((int) (geo[0] * 1E6), (int) (geo[1] * 1E6));
 
-	    mapview.getController().animateTo(gpoint);
+	    if (animateTo)
+	    {
+		mapview.getController().animateTo(gpoint);
+	    }
 
 	    
 	    m_arrPathPoints.add(gpoint);
