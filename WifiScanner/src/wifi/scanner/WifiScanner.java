@@ -5,7 +5,11 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import com.google.android.maps.GeoPoint;
+import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapView;
+import com.google.android.maps.MyLocationOverlay;
+import com.google.android.maps.Overlay;
 
 import wifi.Router;
 
@@ -28,9 +32,10 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class WifiScanner extends Activity {
+public class WifiScanner extends MapActivity {
 
-    // private MapView m_vwMap;
+    private MapView mapview;
+    private MyLocationOverlay m_locationOverlay;
     WifiManager wifim;
     LinearLayout ll;
     ScrollView scroll;
@@ -38,17 +43,14 @@ public class WifiScanner extends Activity {
     LinearLayout m_vwWifiLinearLayout;
     Boolean color;
     Timer myTimer;
-    String[] macAdresses = { "00:12:44:ba:27:10", "00:3a:98:72:ba:a0",
-	    "00:17:Of:35:10:30", "00:12:44:ba:78:10", "00:12:44:ba:70:40",
-	    "00:12:44:ba:7b:30", "00:12:44:ba:78:10", "00:3a:98:72:b8:50",
-	    "00:3a:98:62:b5:00", "00:3a:98:62:b7:00", "00:12:44:ba:77:e0",
-	    "00:24:97:f2:84:c0", "00:12:44:ba:18:60", "00:3a:98:62:b3:b0",
-	    "00:12:44:ba:3a:D9", "00:12:44:ba:3a:b0", "00:24:97:f2:84:00",
+    String[] macAdresses = { "00:12:44:ba:27:10", "00:3a:98:72:ba:a0", "00:17:Of:35:10:30", "00:12:44:ba:78:10", "00:12:44:ba:70:40",
+	    "00:12:44:ba:7b:30", "00:12:44:ba:78:10", "00:3a:98:72:b8:50", "00:3a:98:62:b5:00", "00:3a:98:62:b7:00", "00:12:44:ba:77:e0",
+	    "00:24:97:f2:84:c0", "00:12:44:ba:18:60", "00:3a:98:62:b3:b0", "00:12:44:ba:3a:D9", "00:12:44:ba:3a:b0", "00:24:97:f2:84:00",
 	    "00:24:97:f2:83:80", "00:24:97:f2:84:40", "00:24:97:f3:0d:70" };
-
     ArrayList<Router> _routers = new ArrayList<Router>();
 
     Trilateration trilateration;
+    private ArrayList<GeoPoint> m_arrPathPoints;
 
     private Handler handlerTimer = new Handler();
 
@@ -58,15 +60,27 @@ public class WifiScanner extends Activity {
 	super.onCreate(savedInstanceState);
 	setContentView(R.layout.main);
 
-	// m_vwMap = (MapView) findViewById(R.id.m_vwMap);
-	// m_vwMap.setBuiltInZoomControls(true);
+	mapview = (MapView) findViewById(R.id.mapview);
+	mapview.setBuiltInZoomControls(true);
 
 	makeButtonListener();
 	scan();
 	addRouters();
 
+	m_locationOverlay = new MyLocationOverlay(this, mapview);
+	m_locationOverlay.enableCompass();
+
 	handlerTimer.removeCallbacks(taskUpdateWifis);
 	handlerTimer.postDelayed(taskUpdateWifis, 100);
+
+	m_arrPathPoints = new ArrayList<GeoPoint>();
+
+	List<Overlay> listoverlay = mapview.getOverlays();
+	listoverlay.add(m_locationOverlay);
+	
+	listoverlay.add(new PathOverlay(m_arrPathPoints));
+	mapview.setSatellite(true);
+//	drawRouters();
     }
 
     private void addRouters() {
@@ -147,6 +161,7 @@ public class WifiScanner extends Activity {
 	    for (ScanResult s : listSort) {
 		for (int i = 0; i < _routers.size(); i++) {
 		    if (s.BSSID.equals(_routers.get(i).get_macAddress())) {
+			
 			_routers.get(i).setFrequency(s.frequency);
 			_routers.get(i).setLevel(s.level);
 			_routers.get(i).setSsid(s.SSID);
@@ -160,7 +175,54 @@ public class WifiScanner extends Activity {
 	    testGeo(_routers2);
 	}
     }
+    
+    public void drawRouters()
+    {
+	for (Router r : _routers) 
+	{
+	    GeoPoint gpoint = r.getGeoPoint();
+	    m_arrPathPoints.add(gpoint);
+	    mapview.postInvalidate();
+	}
+    }
 
+    
+//	public void testGeo(List<ScanResult> listSort)
+//	{
+//		ArrayList<ScanResult> test = new ArrayList<ScanResult>();
+//		test.clear();
+//		for (ScanResult s : listSort)
+//		{
+//			for (int i = 0; i < macAdresses.length; i++)
+//			{
+//				if (test.size() < 3)
+//				{
+//					test.add(s);
+//				}
+//			}
+//		}
+//		
+//		double[] geo = trilateration.MyTrilateration(51.451690, 5.481781, trilateration.calcDistance(test.get(0).level), 
+//														51.451563, 5.481635, trilateration.calcDistance(test.get(1).level), 51.451587, 5.481856, trilateration.calcDistance(test.get(2).level));
+//		
+//		    tv = new TextView(this);
+//		    tv.setText("Location:\n Lat:\t " + geo[0] + "\n Long:\t " + geo[1] + "\n");
+//		    tv.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+//		    m_vwWifiLinearLayout.addView(tv, 0);
+//		    
+//		    GeoPoint gpoint = new GeoPoint((int) (geo[0] * 1E6), (int) (geo[1] * 1E6));
+//
+//		    mapview.getController().animateTo(gpoint);
+//	
+//		    if (gpoint != null)
+//		    {
+//			m_arrPathPoints.add(gpoint);
+//			mapview.postInvalidate();
+//		    }
+//		
+//	}
+	
+	
     public void testGeo(ArrayList<Router> routers) {
 	ArrayList<Router> test = new ArrayList<Router>();
 	test.clear();
@@ -172,30 +234,30 @@ public class WifiScanner extends Activity {
 	}
 
 	if (!(test.size() < 3)) {
-	    double[] geo = Trilateration.MyTrilateration(test.get(0)
-		    .get_latitude(), test.get(0).get_longitude(), Trilateration
-		    .calcDistance(test.get(0).getLevel()), test.get(1)
-		    .get_latitude(), test.get(1).get_longitude(), Trilateration
-		    .calcDistance(test.get(1).getLevel()), test.get(2)
-		    .get_latitude(), test.get(2).get_longitude(), Trilateration
-		    .calcDistance(test.get(2).getLevel()));
+	    double[] geo = Trilateration.MyTrilateration(
+		    test.get(0).get_latitude(), test.get(0).get_longitude(), Trilateration.calcDistance(test.get(0).getLevel()),
+		    test.get(1).get_latitude(), test.get(1).get_longitude(), Trilateration.calcDistance(test.get(1).getLevel()), 
+		    test.get(2).get_latitude(), test.get(2).get_longitude(), Trilateration.calcDistance(test.get(2).getLevel()));
 
 	    tv = new TextView(this);
-	    tv.setText("Location:\n Lat:\t " + geo[0] + "\n Long:\t " + geo[1]
-		    + "\n");
-	    tv.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,
-		    LayoutParams.WRAP_CONTENT));
+	    tv.setText("Location:\n Lat:\t " + geo[0] + "\n Long:\t " + geo[1] + "\n");
+	    tv.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
 	    m_vwWifiLinearLayout.addView(tv, 0);
+
+	    GeoPoint gpoint = new GeoPoint((int) (geo[0] * 1E6), (int) (geo[1] * 1E6));
+
+	    mapview.getController().animateTo(gpoint);
+
+	    
+	    m_arrPathPoints.add(gpoint);
+	    mapview.postInvalidate();
+
 	} else {
 	    tv = new TextView(this);
 	    tv.setText("No Location: ");
-	    tv.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,
-		    LayoutParams.WRAP_CONTENT));
+	    tv.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
 	    m_vwWifiLinearLayout.addView(tv, 0);
 	}
-	// Toast toast = Toast.makeText(getApplicationContext(), ""+ geo[0] +
-	// " - " + geo[1], Toast.LENGTH_SHORT);
-	// toast.show();
 
     }
 
@@ -204,26 +266,21 @@ public class WifiScanner extends Activity {
 	for (Router r : routers) {
 	    tv = new TextView(this);
 	    tv.setText("WifiInfo:");
-	    tv.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,
-		    LayoutParams.WRAP_CONTENT));
+	    tv.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
 	    m_vwWifiLinearLayout.addView(tv);
 
 	    tv = new TextView(this);
-	    tv.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,
-		    LayoutParams.WRAP_CONTENT));
+	    tv.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
 
-	    double distance = trilateration.calcDistance(convertDbmToRSSI(r
-		    .getLevel()));
+	    double distance = Trilateration.calcDistance(convertDbmToRSSI(r.getLevel()));
 
 	    // tv.setText(" SSID: \t\t\t\t" + "" + "\n Frequency: \t\t " +
 	    // r.frequency + "\n Signal(dBm): \t" + r.level + "\n Mac: \t\t\t\t"
 	    // + r.get_macAddress());
 	    // tv.setText(s.level + " - " + s.BSSID);
 
-	    tv.setText(" SSID: \t\t\t\t" + r.getSsid() + "\n Frequency: \t\t "
-		    + r.getFrequency() + "\n Signal(dBm): \t" + r.getLevel()
-		    + "\n Mac: \t\t\t\t" + r.get_macAddress() + "\nDistance: "
-		    + distance);
+	    tv.setText(" SSID: \t\t\t\t" + r.getSsid() + "\n Frequency: \t\t " + r.getFrequency() + "\n Signal(dBm): \t" + r.getLevel()
+		    + "\n Mac: \t\t\t\t" + r.get_macAddress() + "\nDistance: " + distance);
 	    // tv.setText(s.level + " - " + s.BSSID);
 
 	    if (color) {
@@ -243,14 +300,13 @@ public class WifiScanner extends Activity {
 	MenuInflater inflater = getMenuInflater();
 	inflater.inflate(R.menu.menu, menu);
 
-	menu.findItem(R.id.SCAN_MENU_ITEM).setOnMenuItemClickListener(
-		new OnMenuItemClickListener() {
-		    @Override
-		    public boolean onMenuItemClick(MenuItem item) {
-			scan();
-			return false;
-		    }
-		});
+	menu.findItem(R.id.SCAN_MENU_ITEM).setOnMenuItemClickListener(new OnMenuItemClickListener() {
+	    @Override
+	    public boolean onMenuItemClick(MenuItem item) {
+		scan();
+		return false;
+	    }
+	});
 	return true;
     }
 
@@ -543,6 +599,12 @@ public class WifiScanner extends Activity {
 	    break;
 	}
 	return returnValue;
+    }
+
+    @Override
+    protected boolean isRouteDisplayed() {
+	// TODO Auto-generated method stub
+	return false;
     }
 
 }
