@@ -1,5 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="hello">Hello World, WifiScanner!</string>
     <string name="app_name">Wifi Scanner</string>
+    <string name="mapApiKey">0iJMHcXYdOjVnkzN0LF21U4npOFg8io1SvAo9rQ</string> 
+    
+    <!--  MenuItem titles -->
+    <string name="startRecording">Start</string>
+    <string name="stopRecording">Stop</string>
+    <string name="load">Load</string>
+    <string name="save">Save</string>
+    <string name="takePicture">Take Picture</string>
+    <string name="enableGPS">Enable GPS</string>
+    
+    <!-- Load/Save strings-->
+    <string name="geoPathFileName">walkabout.dat</string>
+    <string name="saveSuccess">Saved...</string>
+    <string name="saveFailed">Save Failed...</string>
+    <string name="saveNoData">Nothing to save...</string>
+    <string name="loadSuccess">Loaded...</string>
+    <string name="loadFailed">Load Failed...</string>
+    <string name="loadNoFile">Nothing to load...</string>
 </resources>
