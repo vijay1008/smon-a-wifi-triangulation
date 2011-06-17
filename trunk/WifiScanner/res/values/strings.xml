@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Wifi Scanner</string>
+    <string name="app_name">Wifi Scanner Location</string>
     <string name="mapApiKey">0iJMHcXYdOjVnkzN0LF21U4npOFg8io1SvAo9rQ</string> 
     
     <!--  MenuItem titles -->
