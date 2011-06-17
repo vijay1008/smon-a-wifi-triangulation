@@ -48,7 +48,6 @@ public class WifiScanner extends MapActivity {
     private Handler handlerTimer = new Handler();
     private ArrayList<GeoPoint> geoPointsRouters;
     private boolean animateTo = true;
-    private Button buttonFocusLocation;
     
     String[] macAdresses = { "00:12:44:ba:27:10", "00:3a:98:72:ba:a0", "00:17:Of:35:10:30", "00:12:44:ba:78:10", "00:12:44:ba:70:40",
 	    "00:12:44:ba:7b:30", "00:12:44:ba:78:10", "00:3a:98:72:b8:50", "00:3a:98:62:b5:00", "00:3a:98:62:b7:00", "00:12:44:ba:77:e0",
@@ -83,10 +82,6 @@ public class WifiScanner extends MapActivity {
 	//calculate points
 	listoverlay.add(new PathOverlay(m_arrPathPoints));
 	
-		
-	
-	
-	makeButtonListener();
 	scan();
 	addRouters();
 	drawRouters(_routers);
@@ -126,15 +121,7 @@ public class WifiScanner extends MapActivity {
 	}
     };
 
-    private void makeButtonListener() {
-	findViewById(R.id.buttonScan).setOnClickListener(new OnClickListener() {
 
-	    @Override
-	    public void onClick(View v) {
-		scan();
-	    }
-	});
-    }
 
     public void scan() {
 	color = true;
@@ -211,11 +198,20 @@ public class WifiScanner extends MapActivity {
 	}
 
 	if (!(test.size() < 3)) {
+	    
+	    
 //	    double[] geo = Trilateration.MyTrilateration(
 //		    test.get(0).get_latitude(), test.get(0).get_longitude(), test.get(0).getLevel(),
 //		    test.get(1).get_latitude(), test.get(1).get_longitude(), test.get(1).getLevel(), 
 //		    test.get(2).get_latitude(), test.get(2).get_longitude(), test.get(2).getLevel());
 	    
+	    //Jeroen met convert
+//	    double[] geo = Wrilateration.getGeo(
+//		    test.get(0).get_latitude(), test.get(0).get_longitude(), convertDbmToRSSI(test.get(0).getLevel()),
+//		    test.get(1).get_latitude(), test.get(1).get_longitude(), convertDbmToRSSI(test.get(1).getLevel()), 
+//		    test.get(2).get_latitude(), test.get(2).get_longitude(), convertDbmToRSSI(test.get(2).getLevel()));
+	    
+	    //Jeroen zonder convert
 	    double[] geo = Wrilateration.getGeo(
 		    test.get(0).get_latitude(), test.get(0).get_longitude(), test.get(0).getLevel(),
 		    test.get(1).get_latitude(), test.get(1).get_longitude(), test.get(1).getLevel(), 
@@ -286,6 +282,14 @@ public class WifiScanner extends MapActivity {
 	MenuInflater inflater = getMenuInflater();
 	inflater.inflate(R.menu.menu, menu);
 
+	menu.findItem(R.id.SCAN_MENU_ITEM).setOnMenuItemClickListener(new OnMenuItemClickListener() {
+	    @Override
+	    public boolean onMenuItemClick(MenuItem item) {
+		scan();
+		return false;
+	    }
+	});
+	
 	menu.findItem(R.id.FOCUS_MENU_ITEM).setOnMenuItemClickListener(new OnMenuItemClickListener() {
 	    @Override
 	    public boolean onMenuItemClick(MenuItem item) {

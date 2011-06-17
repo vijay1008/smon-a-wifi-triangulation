@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu  xmlns:android="http://schemas.android.com/apk/res/android">
+  	<item android:id="@+id/SCAN_MENU_ITEM" android:title="Scan" />
   	<item android:id="@+id/FOCUS_MENU_ITEM" android:title="Focus Location" />
   	<item android:id="@+id/CLEAR_MENU_ITEM" android:title="Clear" />
 </menu>
