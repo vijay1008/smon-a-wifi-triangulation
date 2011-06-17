@@ -3,14 +3,14 @@ package wifi;
 public class Router {
 
 	String _macAddress = "";
-	long _longitude = 0;
-	long _latitude = 0;
+	double _longitude = 0;
+	double _latitude = 0;
 	
-	public Router(String _macAddress, long _longitude, long _latitude) {
+	public Router(String macAddress, double latitude, double longitude) {
 		super();
-		this._macAddress = _macAddress;
-		this._longitude = _longitude;
-		this._latitude = _latitude;
+		this._macAddress = macAddress;
+		this._latitude = latitude;
+		this._longitude = longitude;
 	}
 
 	public String get_macAddress() {
@@ -21,7 +21,7 @@ public class Router {
 		this._macAddress = _macAddress;
 	}
 
-	public long get_longitude() {
+	public double get_longitude() {
 		return _longitude;
 	}
 
@@ -29,7 +29,7 @@ public class Router {
 		this._longitude = _longitude;
 	}
 
-	public long get_latitude() {
+	public double get_latitude() {
 		return _latitude;
 	}
 
